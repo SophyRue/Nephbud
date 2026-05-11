@@ -1,0 +1,19 @@
+{% extends 'core/base.html' %}
+{% block title %}You're on the list — RenalCheck{% endblock %}
+{% block content %}
+<section class="rc-dark-section py-5 min-vh-80">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-6 text-center">
+        <div class="rc-success-icon mx-auto mb-4">✓</div>
+        <h1 class="rc-h2 text-white mb-3">You're on the list.</h1>
+        <p class="text-white-50 mb-5">Welcome to RenalCheck. You're among the first Nigerians who will have access when we launch.<br><br>We'll be in touch — and in the meantime, use the assessment preview to check your risk right now.</p>
+        <div class="d-flex flex-wrap gap-3 justify-content-center">
+          <a href="{% url 'assessment' %}" class="btn rc-btn-white">Try the assessment →</a>
+          <a href="{% url 'home' %}" class="btn rc-btn-outline-white">Back to home</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,373 @@
+{# home.html — Main landing page #}
+{# Extends base.html which provides nav, footer, and Bootstrap #}
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}RenalCheck — Your Everyday Habits, Your Kidney Health{% endblock %}
+
+{% block content %}
+
+{# ══════════════════════════════════════════════════════════════════════════ #}
+{# HERO SECTION #}
+{# ══════════════════════════════════════════════════════════════════════════ #}
+<section class="rc-hero">
+  <div class="container-fluid px-0">
+    <div class="row g-0 min-vh-90">
+
+      {# Left side — headline and CTAs #}
+      <div class="col-lg-6 rc-hero-left d-flex align-items-center">
+        <div class="rc-hero-content">
+          <div class="rc-badge mb-4">
+            <span class="rc-pulse-dot"></span>
+            Nigeria-first · Launching soon
+          </div>
+          <h1 class="rc-h1">
+            Your kidneys work silently.<br>
+            RenalCheck makes sure you <em>hear them.</em>
+          </h1>
+          <p class="rc-hero-sub">
+            1 in 7 Nigerians is at risk of chronic kidney disease. Most will not know until it is too late to reverse. RenalCheck reads your daily habits and tells you where you stand, before a hospital has to.
+          </p>
+          <div class="d-flex flex-wrap gap-3 mb-4">
+            <a href="{% url 'waitlist' %}" class="btn rc-btn-primary">Join the waitlist</a>
+            <a href="{% url 'assessment' %}" class="btn rc-btn-outline">Preview the assessment</a>
+          </div>
+          <div class="rc-stat-row">
+            <div class="rc-stat-item">
+              <div class="rc-stat-val">1 in 7</div>
+              <div class="rc-stat-lbl">Nigerians living with CKD risk</div>
+            </div>
+            <div class="rc-stat-item">
+              <div class="rc-stat-val">99.8%</div>
+              <div class="rc-stat-lbl">Do not know their habits are a factor</div>
+            </div>
+            <div class="rc-stat-item">
+              <div class="rc-stat-val">3 min</div>
+              <div class="rc-stat-lbl">To get your personalised risk profile</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {# Right side — phone mockup (hidden on mobile) #}
+      <div class="col-lg-6 rc-hero-right d-none d-lg-flex align-items-center justify-content-center">
+        <div class="rc-phone-mockup">
+          <div class="rc-phone-header">
+            <div class="rc-phone-logo">RenalCheck</div>
+            <span class="rc-phone-badge">PREVIEW</span>
+          </div>
+          <div class="rc-phone-card">
+            <div class="rc-p-label">Your kidney risk profile</div>
+            <div class="d-flex align-items-center gap-2 mb-3">
+              <div class="rc-avatar">AO</div>
+              <div>
+                <div class="rc-p-name">Adaeze, 34</div>
+                <div class="rc-p-tag">Assessment completed · Now</div>
+              </div>
+            </div>
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <div class="rc-score-num">18</div>
+              <span class="rc-badge-low">Low risk</span>
+            </div>
+            <div class="rc-bar mb-3"><div class="rc-bar-fill" style="width:18%;background:#2d9b5a"></div></div>
+            <div class="rc-p-rec">💧 Increase daily water to 2.5L. Your habits are protective — keep going.</div>
+          </div>
+          <div class="rc-phone-card mb-3">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <div>
+                <div class="rc-p-name">Balogun, 47</div>
+                <div class="rc-p-tag">Yesterday</div>
+              </div>
+              <span class="rc-badge-mod">Moderate</span>
+            </div>
+            <div class="rc-bar"><div class="rc-bar-fill" style="width:55%;background:#ef9f27"></div></div>
+          </div>
+          <div class="rc-nudge-card d-flex gap-3">
+            <div class="rc-nudge-icon">⏰</div>
+            <div>
+              <strong class="d-block text-white" style="font-size:.8rem">It's been 7 days, Balogun.</strong>
+              <span style="font-size:.75rem;color:rgba(255,255,255,.7)">Your kidneys don't take breaks. Your risk check-in is overdue.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+{# ══════════════════════════════════════════════════════════════════════════ #}
+{# DISCLAIMER SECTION #}
+{# ══════════════════════════════════════════════════════════════════════════ #}
+<div class="rc-disc-section">
+  <div class="container">
+    <div class="d-flex gap-4 align-items-start">
+      <div class="rc-disc-icon-big flex-shrink-0">⚠️</div>
+      <div>
+        <h3 class="rc-disc-title">RenalCheck is not a diagnosis. It is the awareness that gets you ahead of one.</h3>
+        <p class="rc-disc-text">This is a lifestyle based risk awareness tool, not a clinical test. It uses evidence informed factors to estimate your kidney health risk based on your daily habits, but it cannot replace a doctor's evaluation or laboratory results. If your score comes back moderate or high, that is your signal to see a nephrologist or physician. We exist to give you that signal before it becomes urgent.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+{# ══════════════════════════════════════════════════════════════════════════ #}
+{# HABITS / AWARENESS SECTION #}
+{# ══════════════════════════════════════════════════════════════════════════ #}
+<section class="rc-dark-section">
+  <div class="container">
+    <div class="row g-5 align-items-start">
+
+      {# Left — text and stat cards #}
+      <div class="col-lg-6">
+        <div class="rc-eyebrow text-success-mid mb-2">The connection most people miss</div>
+        <h2 class="rc-h2 text-white mb-4">Your daily habits shape your kidney health</h2>
+        <p class="rc-dark-text mb-4">Most Nigerians who develop kidney disease had warning signs in their daily routines for years. The extra salt, the skipped water, the painkillers taken without a second thought. RenalCheck connects those habits to your risk, so you can do something about it while prevention still works.</p>
+        <div class="row g-3">
+          <div class="col-6"><div class="rc-stat-card"><div class="rc-big-num">Salt</div><p>High sodium intake raises blood pressure, which strains kidney function over time.</p></div></div>
+          <div class="col-6"><div class="rc-stat-card"><div class="rc-big-num">Water</div><p>Chronic under hydration is common and reversible. Small increases help your kidneys filter waste.</p></div></div>
+          <div class="col-6"><div class="rc-stat-card"><div class="rc-big-num">Family</div><p>A family history of hypertension, diabetes, or kidney disease changes your baseline risk. Worth knowing early.</p></div></div>
+          <div class="col-6"><div class="rc-stat-card"><div class="rc-big-num">Painkillers</div><p>Frequent use of over the counter analgesics and herbal remedies stresses the kidneys more than most people realise.</p></div></div>
+        </div>
+      </div>
+
+      {# Right — lifestyle timeline #}
+      <div class="col-lg-6">
+        <div class="rc-eyebrow text-success-mid mb-4">How risk changes with time</div>
+        <div class="rc-timeline">
+          <div class="rc-timeline-item">
+            <div class="rc-stage">Your 20s and early 30s</div>
+            <h4 class="text-white">Build good habits now</h4>
+            <p>Your kidneys are resilient. The patterns you build today, hydration, diet, activity, set the foundation for decades to come.</p>
+          </div>
+          <div class="rc-timeline-item">
+            <div class="rc-stage">Mid 30s to 40s</div>
+            <h4 class="text-white">Small shifts, big impact</h4>
+            <p>Blood pressure and weight start reflecting years of choices. This is the window where lifestyle changes matter most.</p>
+          </div>
+          <div class="rc-timeline-item">
+            <div class="rc-stage">Late 40s and beyond</div>
+            <h4 class="text-white">It is never too late</h4>
+            <p>People who understood their risk earlier tend to have better outcomes. Acting now still makes a meaningful difference.</p>
+          </div>
+          <div class="rc-timeline-item">
+            <div class="rc-stage">At any age</div>
+            <h4 class="text-white">Awareness is the first step</h4>
+            <p>RenalCheck gives you clear, honest information about your personal risk. What you do with it is up to you.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+{# ══════════════════════════════════════════════════════════════════════════ #}
+{# HOW IT WORKS #}
+{# ══════════════════════════════════════════════════════════════════════════ #}
+<section class="rc-cream-section" id="how-it-works">
+  <div class="container">
+    <div class="rc-eyebrow text-green mb-2">How it works</div>
+    <h2 class="rc-h2 mb-2">From your habits to your risk profile, in four steps</h2>
+    <p class="rc-sub mb-5">No lab visits. No medical jargon. Just honest, personalised clarity based on how you actually live.</p>
+    <div class="row g-4">
+      <div class="col-sm-6 col-lg-3">
+        <div class="rc-step-card h-100">
+          <div class="rc-step-num">1</div>
+          <h3>Tell us about your life</h3>
+          <p>Answer questions about your diet, hydration, blood pressure, family history, medication use, and daily habits. Takes under 3 minutes. No guesswork required.</p>
+        </div>
+      </div>
+      <div class="col-sm-6 col-lg-3">
+        <div class="rc-step-card h-100">
+          <div class="rc-step-num">2</div>
+          <h3>We calculate your risk</h3>
+          <p>Our clinically informed model scores your kidney risk instantly. Built around the specific risk factors most relevant to Nigerian adults, not a Western population.</p>
+        </div>
+      </div>
+      <div class="col-sm-6 col-lg-3">
+        <div class="rc-step-card h-100">
+          <div class="rc-step-num">3</div>
+          <h3>See what is driving it</h3>
+          <p>Get a clear Low, Moderate, or High risk rating and see exactly which habits are contributing to it, with plain language explanations of what each factor means for you personally.</p>
+        </div>
+      </div>
+      <div class="col-sm-6 col-lg-3">
+        <div class="rc-step-card h-100">
+          <div class="rc-step-num">4</div>
+          <h3>Stay ahead of it</h3>
+          <p>RenalCheck tracks your progress, sends intelligent reminders when you are overdue, and shows you how lifestyle changes actually move your score over time.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{# ══════════════════════════════════════════════════════════════════════════ #}
+{# FEATURES #}
+{# ══════════════════════════════════════════════════════════════════════════ #}
+<section class="rc-white-section" id="features">
+  <div class="container">
+    <div class="rc-eyebrow text-green mb-2">Built different</div>
+    <h2 class="rc-h2 mb-2">More than a score. A system built to keep you honest.</h2>
+    <p class="rc-sub mb-5">Knowing your risk once does not protect you. RenalCheck is designed to stay with you, reminding, tracking, and guiding you until your habits actually change.</p>
+    <div class="row g-4">
+      {% for icon, title, text, tag, color in features %}
+      <div class="col-sm-6 col-lg-4">
+        <div class="rc-feature-card h-100">
+          <div class="rc-feat-icon rc-feat-{{ color }}">{{ icon }}</div>
+          <h3>{{ title }}</h3>
+          <p>{{ text }}</p>
+          <span class="rc-feat-tag">→ {{ tag }}</span>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{# ══════════════════════════════════════════════════════════════════════════ #}
+{# CALL TO ACTION — Assessment & Waitlist #}
+{# ══════════════════════════════════════════════════════════════════════════ #}
+<section class="rc-cta-section">
+  <div class="container text-center">
+    <div class="rc-eyebrow text-success-mid mb-3">Take the first step</div>
+    <h2 class="rc-h2 text-white mb-3">Find out where you stand, in 3 minutes</h2>
+    <p class="text-white-50 mb-5" style="max-width:500px;margin:0 auto 2rem">Preview the assessment now, no account, no commitment. Then join the waitlist to unlock full tracking, reminders, and your complete risk profile when we launch.</p>
+    <div class="d-flex flex-wrap gap-3 justify-content-center">
+      <a href="{% url 'assessment' %}" class="btn rc-btn-white">Try the assessment →</a>
+      <a href="{% url 'waitlist' %}" class="btn rc-btn-outline-white">Join the waitlist</a>
+    </div>
+  </div>
+</section>
+
+{# ══════════════════════════════════════════════════════════════════════════ #}
+{# REVIEWS — pulled from database, only approved=True #}
+{# ══════════════════════════════════════════════════════════════════════════ #}
+<section class="rc-cream-section" id="reviews">
+  <div class="container">
+    <div class="rc-eyebrow text-green mb-2">Community</div>
+    <h2 class="rc-h2 mb-5">What people are saying</h2>
+
+    {% if reviews %}
+    <div class="row g-4 mb-5">
+      {% for review in reviews %}
+      <div class="col-md-6 col-lg-4">
+        <div class="rc-review-card h-100">
+          <div class="rc-stars mb-3">
+            {% for i in "12345" %}
+              {% if forloop.counter <= review.rating %}★{% else %}☆{% endif %}
+            {% endfor %}
+          </div>
+          <p class="rc-review-text">"{{ review.comment }}"</p>
+          <div class="rc-review-author mt-auto pt-3">
+            <div class="rc-avatar-sm">{{ review.name|first|upper }}</div>
+            <div>
+              <div class="rc-author-name">{{ review.name }}</div>
+              {% if review.city %}<div class="rc-author-role">{{ review.city }}</div>{% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <p class="text-muted mb-5">No reviews yet — be the first to leave one below!</p>
+    {% endif %}
+
+    {# ── REVIEW FORM ─────────────────────────────────────────────────────── #}
+    {# This form posts to the home view, which saves it as approved=False #}
+    {# You approve reviews via Django admin at /admin/ #}
+    <div class="row justify-content-center">
+      <div class="col-lg-7">
+        <div class="rc-review-form-card">
+          <h3 class="mb-1">Leave a review</h3>
+          <p class="text-muted mb-4" style="font-size:.88rem">Tell us about your experience with this website. Reviews are moderated before appearing.</p>
+
+          <form method="post" action="{% url 'home' %}#reviews">
+            {% csrf_token %}{# Django security token — required on every POST form #}
+
+            <div class="mb-3">
+              <label class="form-label fw-semibold">Your name</label>
+              {{ review_form.name }}
+              {% if review_form.name.errors %}<div class="text-danger small mt-1">{{ review_form.name.errors.0 }}</div>{% endif %}
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label fw-semibold">Location <span class="text-muted fw-normal">(optional)</span></label>
+              {{ review_form.city }}
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label fw-semibold">Rating</label>
+              <div class="rc-star-input" id="reviewStars">
+                <span data-val="1">★</span><span data-val="2">★</span>
+                <span data-val="3">★</span><span data-val="4">★</span>
+                <span data-val="5">★</span>
+              </div>
+              {{ review_form.rating }}{# Hidden input — JS populates it #}
+              {% if review_form.rating.errors %}<div class="text-danger small mt-1">Please select a star rating.</div>{% endif %}
+            </div>
+
+            <div class="mb-4">
+              <label class="form-label fw-semibold">Your review</label>
+              {{ review_form.comment }}
+              {% if review_form.comment.errors %}<div class="text-danger small mt-1">{{ review_form.comment.errors.0 }}</div>{% endif %}
+            </div>
+
+            <button type="submit" class="btn rc-btn-primary w-100">Submit review</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{# ══════════════════════════════════════════════════════════════════════════ #}
+{# FAQ #}
+{# ══════════════════════════════════════════════════════════════════════════ #}
+<section class="rc-white-section" id="faq">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+        <div class="rc-eyebrow text-green mb-2">Questions</div>
+        <h2 class="rc-h2 mb-5">Frequently asked</h2>
+        <div class="accordion rc-accordion" id="faqAccordion">
+
+          {% for q, a in faqs %}
+          <div class="accordion-item rc-faq-item">
+            <h2 class="accordion-header">
+              <button class="accordion-button {% if not forloop.first %}collapsed{% endif %} rc-faq-btn"
+                type="button" data-bs-toggle="collapse" data-bs-target="#faq{{ forloop.counter }}">
+                {{ q }}
+              </button>
+            </h2>
+            <div id="faq{{ forloop.counter }}" class="accordion-collapse collapse {% if forloop.first %}show{% endif %}" data-bs-parent="#faqAccordion">
+              <div class="accordion-body rc-faq-body">{{ a }}</div>
+            </div>
+          </div>
+          {% endfor %}
+
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Star rating for the review form
+// When user clicks a star, set the hidden input value
+const stars = document.querySelectorAll('#reviewStars span');
+const ratingInput = document.getElementById('id_rating');
+stars.forEach(s => {
+  s.addEventListener('click', () => {
+    const val = +s.dataset.val;
+    ratingInput.value = val;
+    stars.forEach((st, i) => st.classList.toggle('active', i < val));
+  });
+});
+</script>
+{% endblock %}

@@ -1,0 +1,262 @@
+{# assessment.html — Risk calculator page #}
+{# All scoring logic runs in JavaScript — nothing is saved to the database #}
+{% extends 'core/base.html' %}
+
+{% block title %}Risk Assessment — RenalCheck{% endblock %}
+
+{% block content %}
+<section class="rc-cream-section">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+
+        <div class="text-center mb-5">
+          <div class="rc-eyebrow text-green mb-2">Interactive preview</div>
+          <h1 class="rc-h2 mb-2">Try the risk assessment</h1>
+          <p class="rc-sub">This is a preview of the full RenalCheck assessment. Results are for awareness only — not a diagnosis.</p>
+        </div>
+
+        <div class="rc-assess-card">
+
+          {# Bold medical disclaimer — always visible before form #}
+          <div class="rc-assess-disclaimer mb-4">
+            <span class="fs-5 me-2">⚠️</span>
+            <div><strong>Medical disclaimer:</strong> This tool provides a lifestyle-based risk estimate only. It is not a diagnostic tool and does not replace professional medical advice, examination, or testing. If your result indicates moderate or high risk, please consult a qualified healthcare professional promptly.</div>
+          </div>
+
+          {# ── ASSESSMENT FORM — pure JS, no Django form ────────────── #}
+          {# We use a plain HTML form here because results are computed client-side #}
+          {# and nothing needs to be stored in the database #}
+          <div class="row g-3 mb-4">
+
+            <div class="col-sm-6">
+              <label class="form-label fw-semibold">Age</label>
+              <input type="number" id="f-age" class="form-control" placeholder="e.g. 38" min="18" max="100">
+            </div>
+            <div class="col-sm-6">
+              <label class="form-label fw-semibold">Biological sex</label>
+              <select id="f-sex" class="form-select">
+                <option value="">Select</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+                <option value="other">Prefer not to say</option>
+              </select>
+            </div>
+            <div class="col-sm-6">
+              <label class="form-label fw-semibold">Weight (kg)</label>
+              <input type="number" id="f-weight" class="form-control" placeholder="e.g. 75" min="30" max="300">
+            </div>
+            <div class="col-sm-6">
+              <label class="form-label fw-semibold">Height (cm)</label>
+              <input type="number" id="f-height" class="form-control" placeholder="e.g. 168" min="100" max="250">
+            </div>
+            <div class="col-sm-6">
+              <label class="form-label fw-semibold">Systolic blood pressure (mmHg)</label>
+              <input type="number" id="f-bp" class="form-control" placeholder="e.g. 120 — leave blank if unknown">
+            </div>
+            <div class="col-sm-6">
+              <label class="form-label fw-semibold">Do you have diabetes?</label>
+              <select id="f-diabetes" class="form-select">
+                <option value="">Select</option>
+                <option value="no">No</option>
+                <option value="pre">Pre-diabetic</option>
+                <option value="type1">Yes – Type 1</option>
+                <option value="type2">Yes – Type 2</option>
+                <option value="unknown">Not sure</option>
+              </select>
+            </div>
+
+            <div class="col-12">
+              <label class="form-label fw-semibold">Family history of kidney-related conditions</label>
+              <div class="row g-2">
+                <div class="col-sm-6"><div class="form-check rc-check-item"><input class="form-check-input" type="checkbox" id="fh-kidney"><label class="form-check-label" for="fh-kidney">Kidney disease</label></div></div>
+                <div class="col-sm-6"><div class="form-check rc-check-item"><input class="form-check-input" type="checkbox" id="fh-htn"><label class="form-check-label" for="fh-htn">High blood pressure</label></div></div>
+                <div class="col-sm-6"><div class="form-check rc-check-item"><input class="form-check-input" type="checkbox" id="fh-diabetes"><label class="form-check-label" for="fh-diabetes">Diabetes</label></div></div>
+                <div class="col-sm-6"><div class="form-check rc-check-item"><input class="form-check-input" type="checkbox" id="fh-heart"><label class="form-check-label" for="fh-heart">Heart disease</label></div></div>
+              </div>
+            </div>
+
+            <div class="col-12">
+              <label class="form-label fw-semibold">How would you describe your diet?</label>
+              <div class="d-flex flex-wrap gap-2" id="diet-group">
+                <button type="button" class="btn rc-toggle-btn" onclick="toggleBtn(this,'diet-group')">High salt / processed</button>
+                <button type="button" class="btn rc-toggle-btn" onclick="toggleBtn(this,'diet-group')">Moderate — mixed</button>
+                <button type="button" class="btn rc-toggle-btn" onclick="toggleBtn(this,'diet-group')">Healthy — low processed</button>
+              </div>
+            </div>
+
+            <div class="col-12">
+              <label class="form-label fw-semibold">Physical activity level</label>
+              <div class="d-flex flex-wrap gap-2" id="activity-group">
+                <button type="button" class="btn rc-toggle-btn" onclick="toggleBtn(this,'activity-group')">Sedentary</button>
+                <button type="button" class="btn rc-toggle-btn" onclick="toggleBtn(this,'activity-group')">Lightly active</button>
+                <button type="button" class="btn rc-toggle-btn" onclick="toggleBtn(this,'activity-group')">Regularly active</button>
+              </div>
+            </div>
+
+            <div class="col-sm-6">
+              <label class="form-label fw-semibold">Daily water intake</label>
+              <select id="f-water" class="form-select">
+                <option value="">Select</option>
+                <option value="low">Less than 1 litre</option>
+                <option value="mid">1–2 litres</option>
+                <option value="good">2+ litres</option>
+              </select>
+            </div>
+            <div class="col-sm-6">
+              <label class="form-label fw-semibold">Smoking status</label>
+              <select id="f-smoke" class="form-select">
+                <option value="">Select</option>
+                <option value="never">Never smoked</option>
+                <option value="former">Former smoker</option>
+                <option value="current">Current smoker</option>
+              </select>
+            </div>
+            <div class="col-12">
+              <label class="form-label fw-semibold">Regular use of NSAIDs / painkillers (e.g. ibuprofen)?</label>
+              <select id="f-nsaids" class="form-select">
+                <option value="">Select</option>
+                <option value="rarely">Rarely or never</option>
+                <option value="sometimes">Sometimes (a few times a month)</option>
+                <option value="often">Often (weekly or more)</option>
+              </select>
+            </div>
+
+          </div>
+
+          <div class="text-center mb-3">
+            <button class="btn rc-btn-primary px-5 py-3" onclick="calculateRisk()">Calculate my kidney risk</button>
+          </div>
+          <p class="text-muted text-center" style="font-size:.78rem">By submitting, you acknowledge this is a lifestyle screening tool only — not a diagnostic test. Consult a healthcare professional for all medical concerns.</p>
+
+          {# ── RESULT PANEL — hidden until JS populates it ─────────── #}
+          <div id="result-panel" class="rc-result-panel mt-4" style="display:none">
+            <div class="d-flex justify-content-between align-items-start flex-wrap gap-2 mb-3">
+              <h3 class="mb-0">Your kidney risk profile</h3>
+              <span id="result-badge" class="rc-risk-badge"></span>
+            </div>
+            <div class="mb-3">
+              <div class="rc-score-track mb-1"><div id="score-fill" class="rc-score-fill"></div></div>
+              <div class="d-flex justify-content-between" style="font-size:.7rem;color:#888;font-weight:600"><span>Low</span><span>Moderate</span><span>High</span></div>
+            </div>
+            <div class="row g-3 mb-3" id="recs-grid"></div>
+            <div class="rc-doc-cta">
+              <p id="doctor-msg" class="text-green fw-semibold mb-3"></p>
+              <a href="{% url 'waitlist' %}" class="btn rc-btn-primary">Join waitlist for full tracking &amp; reminders →</a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Toggle diet/activity button groups
+function toggleBtn(el, groupId) {
+  document.querySelectorAll('#' + groupId + ' .rc-toggle-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+}
+
+// ── RISK SCORING ENGINE ─────────────────────────────────────────────────
+function calculateRisk() {
+  let score = 0;
+  const age     = parseInt(document.getElementById('f-age').value) || 0;
+  const weight  = parseInt(document.getElementById('f-weight').value) || 0;
+  const height  = parseInt(document.getElementById('f-height').value) || 0;
+  const bp      = parseInt(document.getElementById('f-bp').value) || 0;
+  const diabetes = document.getElementById('f-diabetes').value;
+  const water   = document.getElementById('f-water').value;
+  const smoke   = document.getElementById('f-smoke').value;
+  const nsaids  = document.getElementById('f-nsaids').value;
+  const dietEl  = document.querySelector('#diet-group .active');
+  const actEl   = document.querySelector('#activity-group .active');
+  const diet    = dietEl ? dietEl.textContent.trim() : '';
+  const activity = actEl ? actEl.textContent.trim() : '';
+
+  if (!age) { alert('Please enter your age to continue.'); return; }
+
+  // Age scoring
+  if (age >= 60) score += 20; else if (age >= 45) score += 12; else if (age >= 35) score += 5;
+  // BMI scoring
+  if (height > 0 && weight > 0) {
+    const bmi = weight / ((height / 100) ** 2);
+    if (bmi >= 35) score += 18; else if (bmi >= 30) score += 12; else if (bmi >= 25) score += 5;
+  }
+  // Blood pressure
+  if (bp >= 160) score += 20; else if (bp >= 140) score += 14; else if (bp >= 130) score += 6;
+  // Diabetes
+  if (diabetes === 'type1' || diabetes === 'type2') score += 22;
+  else if (diabetes === 'pre') score += 10;
+  else if (diabetes === 'unknown') score += 5;
+  // Family history
+  if (document.getElementById('fh-kidney').checked) score += 15;
+  if (document.getElementById('fh-htn').checked) score += 8;
+  if (document.getElementById('fh-diabetes').checked) score += 8;
+  if (document.getElementById('fh-heart').checked) score += 5;
+  // Diet
+  if (diet.includes('High salt')) score += 10; else if (diet.includes('Healthy')) score -= 5;
+  // Activity
+  if (activity.includes('Sedentary')) score += 10; else if (activity.includes('Regularly')) score -= 5;
+  // Water
+  if (water === 'low') score += 8; else if (water === 'good') score -= 3;
+  // Smoking
+  if (smoke === 'current') score += 12; else if (smoke === 'former') score += 5;
+  // NSAIDs
+  if (nsaids === 'often') score += 12; else if (nsaids === 'sometimes') score += 5;
+
+  score = Math.max(0, Math.min(100, score));
+
+  // Determine risk level and generate recommendations
+  let level, bgColor, textColor, fillColor, recs, doctorMsg;
+
+  if (score < 30) {
+    level = 'Low risk'; bgColor = '#e8f5ee'; textColor = '#1a6b3c'; fillColor = '#2d9b5a';
+    recs = [
+      { title: 'Keep it up', body: 'Your current habits are protective. Maintain regular hydration and a balanced, low-sodium diet.' },
+      { title: 'Annual check-in', body: 'Even at low risk, ask your doctor to include a urine and creatinine test at your next routine visit.' },
+      { title: 'Stay active', body: 'Aim for at least 150 minutes of moderate exercise per week to protect kidney and heart health.' },
+      { title: 'Monitor blood pressure', body: 'Keep your BP below 120/80 mmHg. Check it at your pharmacy monthly.' },
+    ];
+    doctorMsg = 'Your risk profile looks healthy! Mention kidney health at your next routine doctor visit. Prevention is always better than cure.';
+  } else if (score < 60) {
+    level = 'Moderate risk'; bgColor = '#fdf3e3'; textColor = '#d4720a'; fillColor = '#ef9f27';
+    recs = [
+      { title: 'Reduce sodium intake', body: 'Aim for less than 2,300mg of sodium per day. Avoid processed foods, stock cubes, and excess salt.' },
+      { title: 'Increase water intake', body: 'Drink at least 2–2.5 litres of water daily. Dehydration strains your kidneys significantly.' },
+      { title: 'Blood pressure monitoring', body: 'If your BP is elevated, discuss medication options with your doctor. Target: below 130/80 mmHg.' },
+      { title: 'Book a kidney function test', body: 'Ask for serum creatinine and urine albumin — these are the earliest markers of kidney stress.' },
+    ];
+    doctorMsg = 'Your profile shows several risk factors that deserve attention. Please schedule a kidney health check with your doctor or nephrologist soon.';
+  } else {
+    level = 'High risk'; bgColor = '#fdf0ee'; textColor = '#c0392b'; fillColor = '#e24b4a';
+    recs = [
+      { title: 'See a doctor urgently', body: 'Your risk profile suggests you should not delay. Please book an appointment with your doctor as soon as possible.' },
+      { title: 'Request specific kidney tests', body: 'Ask for eGFR (estimated glomerular filtration rate) and urine protein. These are essential kidney markers.' },
+      { title: 'Manage blood sugar and BP', body: 'If you have diabetes or hypertension, tight control is the single most protective thing you can do for your kidneys.' },
+      { title: 'Stop NSAIDs immediately', body: 'If you use ibuprofen or similar painkillers regularly, discuss safer alternatives with your doctor right away.' },
+    ];
+    doctorMsg = 'Your risk level is high. Please consult a medical professional urgently. Do not delay seeking professional evaluation.';
+  }
+
+  // Populate result panel
+  const panel = document.getElementById('result-panel');
+  panel.style.display = 'block';
+  document.getElementById('result-badge').textContent = level;
+  document.getElementById('result-badge').style.background = bgColor;
+  document.getElementById('result-badge').style.color = textColor;
+  const fill = document.getElementById('score-fill');
+  fill.style.background = fillColor;
+  fill.style.width = '0%';
+  setTimeout(() => fill.style.width = score + '%', 100);
+  document.getElementById('recs-grid').innerHTML = recs.map(r =>
+    `<div class="col-sm-6"><div class="rc-rec-card"><strong>${r.title}</strong><p class="mb-0 mt-1" style="font-size:.82rem">${r.body}</p></div></div>`
+  ).join('');
+  document.getElementById('doctor-msg').textContent = doctorMsg;
+  panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+</script>
+{% endblock %}

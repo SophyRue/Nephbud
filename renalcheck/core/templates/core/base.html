@@ -1,0 +1,106 @@
+{# base.html — The master layout every page extends #}
+{# All pages share this nav, footer, and stylesheet links #}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}RenalCheck{% endblock %}</title>
+
+  {# Google Fonts #}
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,700;0,900;1,300;1,700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+  {# Bootstrap 5 CSS — handles responsive grid and components #}
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  {# Bootstrap Icons #}
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
+  {# Our custom styles #}
+  <link rel="stylesheet" href="{% static 'css/renalcheck.css' %}">
+
+  {% block extra_head %}{% endblock %}
+</head>
+<body>
+
+{# ── DISCLAIMER BANNER — shown on every page ── #}
+<div class="disclaimer-banner">
+  <span class="disc-dot">!</span>
+  IMPORTANT: RenalCheck is a lifestyle awareness tool — not a medical diagnosis. Always consult a qualified healthcare professional.
+</div>
+
+{# ── NAVIGATION ── #}
+<nav class="navbar navbar-expand-lg rc-nav sticky-top">
+  <div class="container-fluid px-4">
+
+    {# Logo #}
+    <a class="navbar-brand rc-logo" href="{% url 'home' %}">Renal<span>Check</span></a>
+
+    {# Mobile hamburger button — Bootstrap handles the toggle #}
+    <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    {# Nav links — collapse on mobile #}
+    <div class="collapse navbar-collapse" id="navMenu">
+      <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-3">
+        <li class="nav-item"><a class="nav-link" href="{% url 'home' %}#how-it-works">How it works</a></li>
+        <li class="nav-item"><a class="nav-link" href="{% url 'home' %}#features">Features</a></li>
+        <li class="nav-item"><a class="nav-link" href="{% url 'assessment' %}">Risk Assessment</a></li>
+        <li class="nav-item"><a class="nav-link" href="{% url 'home' %}#faq">FAQ</a></li>
+        <li class="nav-item">
+          <a class="btn rc-btn-primary btn-sm px-3" href="{% url 'waitlist' %}">Join the waitlist</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+{# ── FLASH MESSAGES — Django's built-in alert system ── #}
+{# Views use messages.success() / messages.error() and they appear here #}
+{% if messages %}
+<div class="container mt-3">
+  {% for message in messages %}
+  <div class="alert alert-{{ message.tags|default:'info' }} alert-dismissible fade show" role="alert">
+    {{ message }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+  </div>
+  {% endfor %}
+</div>
+{% endif %}
+
+{# ── PAGE CONTENT — each child template fills this block ── #}
+{% block content %}{% endblock %}
+
+{# ── FOOTER ── #}
+<footer class="rc-footer">
+  <div class="container">
+    <div class="row g-4 align-items-start">
+      <div class="col-lg-6">
+        <div class="rc-footer-logo">RenalCheck</div>
+        <p class="rc-footer-text">A lifestyle-based kidney risk awareness platform. Built for Nigeria. Not a diagnostic tool. Always consult a qualified healthcare professional for medical concerns.</p>
+      </div>
+      <div class="col-lg-6 text-lg-end">
+        <div class="d-flex flex-wrap gap-3 justify-content-lg-end">
+          <a href="#" class="rc-footer-link">Privacy policy</a>
+          <a href="#" class="rc-footer-link">Terms of use</a>
+          <a href="{% url 'waitlist' %}" class="rc-footer-link">Join waitlist</a>
+          <a href="mailto:hello@renalcheck.com" class="rc-footer-link">Contact</a>
+        </div>
+      </div>
+    </div>
+    <hr class="rc-footer-hr">
+    <p class="rc-footer-legal text-center">
+      &copy; 2026 RenalCheck. All rights reserved. &middot; This tool does not provide medical diagnosis or clinical recommendations. Results are for lifestyle awareness only. Seek immediate medical attention if you have health concerns.
+    </p>
+  </div>
+</footer>
+
+{# Bootstrap 5 JS — needed for navbar collapse, modals, alerts #}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="{% static 'js/renalcheck.js' %}"></script>
+{% block extra_js %}{% endblock %}
+</body>
+</html>

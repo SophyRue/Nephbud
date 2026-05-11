@@ -1,0 +1,208 @@
+{# waitlist.html — Separate page for the 3-step waitlist sign-up #}
+{% extends 'core/base.html' %}
+
+{% block title %}Join the Waitlist — RenalCheck{% endblock %}
+
+{% block content %}
+<section class="rc-dark-section py-5">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-7">
+
+        {# Page header #}
+        <div class="text-center mb-5">
+          <div class="rc-eyebrow text-success-mid mb-2">Be first</div>
+          <h1 class="rc-h2 text-white mb-3">RenalCheck is coming.<br>Don't wait to <em>find out.</em></h1>
+          <p class="text-white-50">Join the waitlist and be among the first Nigerians with access when we launch. Tell us what you need — we're building this for you.</p>
+        </div>
+
+        {# ── FORM CARD ─────────────────────────────────────────────────── #}
+        <div class="rc-waitlist-card">
+
+          {# Step progress indicator — purely visual, JS controls which section shows #}
+          <div class="rc-step-progress mb-4">
+            <div class="rc-sp-dot active" id="sp1"></div>
+            <div class="rc-sp-dot" id="sp2"></div>
+            <div class="rc-sp-dot" id="sp3"></div>
+          </div>
+
+          {# The entire form is one POST — steps are just shown/hidden by JS #}
+          {# All fields are in the DOM at once; JS validates before allowing next step #}
+          <form method="post" id="waitlistForm">
+            {% csrf_token %}
+
+            {# ── STEP 1: Basic info ─────────────────────────────────── #}
+            <div class="wl-step" id="step1">
+              <h3 class="text-white mb-1">Tell us who you are</h3>
+              <p class="wl-desc">Your spot is free. We'll notify you the moment RenalCheck launches.</p>
+
+              <div class="mb-3">
+                <label class="wl-label">Full name *</label>
+                {{ form.name }}
+                {% if form.name.errors %}<div class="text-danger small mt-1">{{ form.name.errors.0 }}</div>{% endif %}
+              </div>
+              <div class="mb-3">
+                <label class="wl-label">Email address *</label>
+                {{ form.email }}
+                {% if form.email.errors %}<div class="text-danger small mt-1">{{ form.email.errors.0 }}</div>{% endif %}
+              </div>
+              <div class="mb-3">
+                <label class="wl-label">Phone number <span class="text-white-50">(optional — for SMS reminders)</span></label>
+                {{ form.phone }}
+              </div>
+              <div class="mb-4">
+                <label class="wl-label">Where are you based? *</label>
+                {{ form.city }}
+                {% if form.city.errors %}<div class="text-danger small mt-1">{{ form.city.errors.0 }}</div>{% endif %}
+              </div>
+
+              <button type="button" class="btn rc-btn-primary w-100" onclick="goStep(2)">Continue →</button>
+            </div>
+
+            {# ── STEP 2: Consent preferences ────────────────────────── #}
+            <div class="wl-step d-none" id="step2">
+              <h3 class="text-white mb-1">What can we send you?</h3>
+              <p class="wl-desc">Choose what you'd like to receive. You can update these preferences any time.</p>
+
+              {# Each consent checkbox — rendered from form widget #}
+              <div class="rc-consent-list mb-4">
+
+                <label class="rc-consent-item">
+                  {{ form.consent_launch }}
+                  <div>
+                    <strong class="d-block text-white">🚀 Product launch notification</strong>
+                    Be the first to know when RenalCheck officially launches.
+                  </div>
+                </label>
+
+                <label class="rc-consent-item">
+                  {{ form.consent_updates }}
+                  <div>
+                    <strong class="d-block text-white">📬 Early access &amp; beta updates</strong>
+                    Get invited to test RenalCheck before public launch.
+                  </div>
+                </label>
+
+                <label class="rc-consent-item">
+                  {{ form.consent_reminders }}
+                  <div>
+                    <strong class="d-block text-white">⏰ Health reminders &amp; nudges</strong>
+                    Allow RenalCheck to send you periodic kidney health check-in reminders.
+                  </div>
+                </label>
+
+                <label class="rc-consent-item">
+                  {{ form.consent_tips }}
+                  <div>
+                    <strong class="d-block text-white">💡 Kidney health tips &amp; articles</strong>
+                    Practical, Nigeria-relevant kidney health education. Maximum once a week.
+                  </div>
+                </label>
+
+              </div>
+
+              <button type="button" class="btn rc-btn-primary w-100 mb-2" onclick="goStep(3)">Continue →</button>
+              <button type="button" class="btn rc-btn-ghost w-100" onclick="goStep(1)">← Back</button>
+            </div>
+
+            {# ── STEP 3: Feedback ────────────────────────────────────── #}
+            <div class="wl-step d-none" id="step3">
+              <h3 class="text-white mb-1">One last thing</h3>
+              <p class="wl-desc">Your feedback before we build the full product is genuinely valuable.</p>
+
+              <div class="mb-3">
+                <label class="wl-label">How did you hear about RenalCheck?</label>
+                {{ form.how_heard }}
+              </div>
+              <div class="mb-3">
+                <label class="wl-label">What would make you actually use this app regularly?</label>
+                {{ form.use_reasons }}
+              </div>
+              <div class="mb-3">
+                <label class="wl-label">Any concerns or questions?</label>
+                {{ form.concerns }}
+              </div>
+
+              <div class="mb-4">
+                <label class="wl-label">How would you rate this website?</label>
+                <div class="rc-star-input" id="waitlistStars">
+                  <span data-val="1">★</span><span data-val="2">★</span>
+                  <span data-val="3">★</span><span data-val="4">★</span>
+                  <span data-val="5">★</span>
+                </div>
+                {{ form.site_rating }}{# Hidden input populated by JS #}
+              </div>
+
+              <button type="submit" class="btn rc-btn-primary w-100 mb-2">Secure my spot on the waitlist →</button>
+              <button type="button" class="btn rc-btn-ghost w-100" onclick="goStep(2)">← Back</button>
+            </div>
+
+          </form>
+        </div>
+
+        {# Trust signals below the card #}
+        <div class="d-flex flex-wrap gap-3 justify-content-center mt-4">
+          <span class="rc-perk"><span class="rc-perk-dot"></span>Free forever for early members</span>
+          <span class="rc-perk"><span class="rc-perk-dot"></span>No spam — ever</span>
+          <span class="rc-perk"><span class="rc-perk-dot"></span>Cancel anytime</span>
+          <span class="rc-perk"><span class="rc-perk-dot"></span>Your data stays yours</span>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// ── MULTI-STEP FORM LOGIC ────────────────────────────────────────────────
+// Steps are separate divs shown/hidden with d-none class.
+// JS validates required fields before allowing advancement.
+
+let currentStep = 1;
+
+function goStep(n) {
+  // Validate step 1 before moving forward
+  if (n > 1 && currentStep === 1) {
+    const name  = document.querySelector('[name="name"]').value.trim();
+    const email = document.querySelector('[name="email"]').value.trim();
+    const city  = document.querySelector('[name="city"]').value;
+    if (!name || !email || !city) {
+      alert('Please fill in your name, email, and city before continuing.');
+      return;
+    }
+    if (!email.includes('@')) {
+      alert('Please enter a valid email address.');
+      return;
+    }
+  }
+
+  // Hide current step, show target step
+  document.getElementById('step' + currentStep).classList.add('d-none');
+  document.getElementById('step' + n).classList.remove('d-none');
+
+  // Update progress dots
+  for (let i = 1; i <= 3; i++) {
+    const dot = document.getElementById('sp' + i);
+    dot.classList.remove('active', 'done');
+    if (i < n) dot.classList.add('done');
+    if (i === n) dot.classList.add('active');
+  }
+
+  currentStep = n;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// Star rating for site_rating field
+const wStars = document.querySelectorAll('#waitlistStars span');
+const wRating = document.getElementById('id_site_rating');
+wStars.forEach(s => {
+  s.addEventListener('click', () => {
+    const val = +s.dataset.val;
+    wRating.value = val;
+    wStars.forEach((st, i) => st.classList.toggle('active', i < val));
+  });
+});
+</script>
+{% endblock %}
